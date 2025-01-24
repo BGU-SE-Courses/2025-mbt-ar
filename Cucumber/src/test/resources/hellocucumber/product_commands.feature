@@ -2,11 +2,11 @@ Feature: Guest commenting on products
   As a guest user, I want to add comments to products,
   and as an admin, I should be able to disable guest commenting.
 
-  Background:
+  Background: Open product page
     Given the product page is open
 
   Scenario: Guest successfully adds a comment to a product
-    Given a guest user is on the product page
+    Given a guest user logs in and navigates to a product page
     When the guest submits a comment
     Then the comment should be submitted successfully
 

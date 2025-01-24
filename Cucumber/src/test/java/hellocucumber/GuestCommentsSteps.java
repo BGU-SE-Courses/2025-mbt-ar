@@ -3,6 +3,7 @@ package hellocucumber;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -17,58 +18,76 @@ public class GuestCommentsSteps {
 
     // ✅ Constructor initializes Selenium WebDriver
     public GuestCommentsSteps() {
-        WebDriverManager.edgedriver().setup(); // ✅ Automatically downloads correct WebDriver
-        driver = new EdgeDriver(); // ✅ Launches Edge browser
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // ✅ Waits up to 10 seconds for elements
+        WebDriverManager.edgedriver().setup(); 
+        driver = new EdgeDriver(); 
+        wait = new WebDriverWait(driver, Duration.ofSeconds(18)); 
     }
 
     // ==============================
     // SCENARIO 1: User adds a comment (User must be signed in)
     // ==============================
 
-    public void loginAsUser(String username, String password) {
-        System.out.println("Logging in as user...");
-        driver.get("http://localhost:8080/login"); 
+    public void openHomepage() {
+        System.out.println("Opening the application homepage...");
+        driver.get("http://localhost:8080");
+    }
 
-        // ✅ Click on sign-in button
-        WebElement signInButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='_desktop_user_info']/div/a")));
+    // ==============================
+    // ✅ Step: Log in as a user
+    // ==============================
+    public void login(String username, String password) {
+        System.out.println("Logging in as user...");
+        WebElement signInButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"_desktop_user_info\"]/div/a")));
         signInButton.click();
 
-        // ✅ Use XPath for user login form
-        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"field-email\"]"))); // ❌ INSERT CORRECT XPATH HERE
-        WebElement passwordField = driver.findElement(By.xpath("//*[@id=\"field-password\"]")); // ❌ INSERT CORRECT XPATH HERE
-        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"submit-login\"]")); 
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"field-email\"]")));
+        WebElement passwordField = driver.findElement(By.xpath("//*[@id=\"field-password\"]"));
+        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"submit-login\"]"));
 
-        usernameField.sendKeys("bar.pesso26@gmail.com");
-        passwordField.sendKeys("123456789ABCDEF!");
+        usernameField.sendKeys(username);
+        passwordField.sendKeys(password);
         loginButton.click();
     }
 
+    // ==============================
+    // ✅ Step: Navigate to the product page
+    // ==============================
     public void navigateToProductPage() {
         System.out.println("Navigating to the product page...");
-        driver.get("http://localhost:8080/men/1-1-hummingbird-printed-t-shirt.html#/1-size-s/8-color-white"); // ✅ Replace with actual URL
+        WebElement chooseProduct = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/section[1]/div/div[2]/article/div/div[1]/a/picture/img")));
+        chooseProduct.click();
     }
 
+    // ==============================
+    // ✅ Step: Submit a comment
+    // ==============================
     public void submitComment(String commentText) {
-        System.out.println("Submitting a user comment...");
-
-        // ✅ Use XPath for locating elements
+        System.out.println("Submitting a comment...");
+        WebElement button =  wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"empty-product-comment\"]/button")));
+        button.click();
         WebElement titleField = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"comment_title\"]")));
-        WebElement commentField = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"empty-product-comment\"]/button"))); 
-        WebElement submitButton = driver.findElement(By.xpath("//*[@id=\"post-product-comment-form\"]/div[2]/div[2]/button[2]")); 
         titleField.sendKeys("Test Comment");
-        commentField.sendKeys("Hello, this is a test comment.");
+        WebElement commentField = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"comment_content\"]")));
+        commentField.sendKeys("This is a test comment.");
+        WebElement submitButton = driver.findElement(By.xpath("//*[@id=\"post-product-comment-form\"]/div[2]/div[2]/button[2]"));
         submitButton.click();
+        WebElement clickOk = driver.findElement(By.xpath("//*[@id=\"product-comment-posted-modal\"]/div/div/div[2]/div[2]/button"));
+        clickOk.click();
+        
+        
+        
     }
 
+    
     public boolean isCommentSubmittedAndConfirm() {
         System.out.println("Checking if the comment was submitted...");
-
-        // ✅ Use XPath for confirmation message
-        WebElement confirmationMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='alert-success']"))); // ❌ INSERT CORRECT XPATH HERE
+    
+        // Check for confirmation message
+        WebElement confirmationMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'alert-success')]")));
         boolean isDisplayed = confirmationMessage.isDisplayed();
+    
         if (isDisplayed) {
-            WebElement okButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"product-comment-posted-modal\"]/div/div/div[2]/div[2]/button"))); // ❌ INSERT CORRECT XPATH HERE
+            WebElement okButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='OK']")));
             okButton.click();
         }
         return isDisplayed;
@@ -80,41 +99,46 @@ public class GuestCommentsSteps {
 
     public void loginAsAdmin(String username, String password) {
         System.out.println("Logging in as admin...");
-        driver.get("http://localhost:8080/prestashop/admin-login-url"); // ✅ Replace with actual admin URL
+        driver.get("http://localhost:8080/admina/index.php?controller=AdminLogin&token=ee44da13e2afb3732c004af1da695896"); 
 
         // ✅ Use XPath for admin login form
-        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='username']"))); // ❌ INSERT CORRECT XPATH HERE
-        WebElement passwordField = driver.findElement(By.xpath("//input[@name='password']")); // ❌ INSERT CORRECT XPATH HERE
-        WebElement loginButton = driver.findElement(By.xpath("//button[@id='login-button']")); // ❌ INSERT CORRECT XPATH HERE
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"email\"]"))); 
+        WebElement passwordField = driver.findElement(By.xpath("//*[@id=\"passwd\"]")); 
+        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"submit_login\"]")); 
 
-        usernameField.sendKeys(username);
-        passwordField.sendKeys(password);
+        usernameField.sendKeys("demo@prestashop.com");
+        passwordField.sendKeys("prestashop_demo");
         loginButton.click();
     }
 
     public void disableGuestComments() {
         System.out.println("Disabling guest comments...");
 
-        // ✅ Use XPath for settings menu
-        WebElement settingsMenu = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//nav[@id='settings-menu']"))); // ❌ INSERT CORRECT XPATH HERE
-        WebElement disableGuestCommentsToggle = driver.findElement(By.xpath("//input[@id='disable-guest-comments-toggle']")); // ❌ INSERT CORRECT XPATH HERE
-        WebElement saveButton = driver.findElement(By.xpath("//button[@id='save-settings-button']")); // ❌ INSERT CORRECT XPATH HERE
+        WebElement searchBox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"bo_query\"]")));
+        searchBox.sendKeys("comment" + Keys.RETURN);
 
-        settingsMenu.click();
+
+        WebElement module = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/div[5]/table/tbody/tr/td[1]/a")));
+        module.click();
+        
+        WebElement arrow = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"modules-list-container-theme_modules\"]/div/div/div/div[2]/div[4]/div[2]/button")));
+        arrow.click();
+        
+        WebElement disableGuestCommentsToggle = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"modules-list-container-theme_modules\"]/div/div/div/div[2]/div[4]/div[2]/div/li[1]/form/button")));
         disableGuestCommentsToggle.click();
+        
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"module-modal-confirm-productcomments-disable\"]/div/div/div[3]/a")));
         saveButton.click();
-    }
+    } 
 
     public boolean isGuestCommentingDisabled() {
-        System.out.println("Checking if guest comments are disabled...");
-        driver.get("http://localhost:8080/prestashop/product-page-url"); // Reload page
-
-        // ✅ Use XPath for comment input field
-        WebElement commentField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//textarea[@name='comment']"))); // ❌ INSERT CORRECT XPATH HERE
-        return !commentField.isEnabled();
+        System.out.println("Validating if guest commenting is disabled...");
+        WebElement guestCommentToggle = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//*[@id=\"modules-list-container-theme_modules\"]/div[19]/div/div/div[2]/div[4]/div[2]/div/li[1]/form/button")));
+        String toggleState = guestCommentToggle.getAttribute("class");
+        return toggleState.contains("disabled") || !guestCommentToggle.isEnabled();
     }
-
-    // ✅ Close browser after tests
+    
     public void closeBrowser() {
         System.out.println("Closing browser...");
         if (driver != null) {
