@@ -1,19 +1,34 @@
 /* @provengo summon selenium */
+/* @provengo summon constraints */
 
-/**
- * This story opens a new browser window, goes to google.com, and searches for "Pizza".
- */
-bthread('Search', function () {
-  let s = new SeleniumSession('search').start(URL)
-  composeQuery(s, { text: 'Pizza' })
-  startSearch(s)
-})
+// Test case 1 - Guest submits
+bthread('Guest submits comment', function() {
+  const guestSession = new SeleniumSession('guest');
+  guestSession.start(URL);
 
-/**
- * This story opens a new browser window, goes to google.com, and searches for "Pasta" using the "I Feel Lucky" feature.
- */
-bthread('Feeling lucky', function () {
-  let s = new SeleniumSession('lucky').start(URL)
-  composeQuery(s, { text: 'Pasta' })
-  feelLucky(s)
-})
+
+  openFirstProduct(guestSession);
+  submitProductReview(guestSession);
+});
+
+// Test Case 2: Disable Guest Comments
+bthread('Admin disables guest comments', function() {
+  const adminSession = new SeleniumSession('admin');
+  adminSession.start(ADMIN_URL);
+
+  // Prevent turning OFF before it was turned ON
+  // Constraints
+  //   .block(Event('Start(toggleGuestCommentsOFF)'))
+  //   .until(Event('End(toggleGuestCommentsON)'));
+
+  adminLogin(adminSession);  
+  navigateToCommentsSection(adminSession);
+  toggleOFFGuestComments(adminSession);
+});
+
+/** Guest tries to add a review after turned off - Test should fail */
+bthread('Verify comment after blocking rev', function() {
+  const guestSession = new SeleniumSession('guest');
+  guestSession.start(URL);
+  commentWhenBlockShouldFail(guestSession);
+});
