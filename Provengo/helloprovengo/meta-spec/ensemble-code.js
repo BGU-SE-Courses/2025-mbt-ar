@@ -3,17 +3,33 @@
 /**
  * List of events "of interest" that we want test suites to cover.
  */
-const GOALS = [
-    any(/Howdy/),
-    any(/Mars/),
-    Ctrl.markEvent("Classic!")
+const GOALS_DOMAIN_SPECIFIC = [
+    // Ensuring the admin can log in and navigate to comments is critical.
+    Ctrl.markEvent("End(AdminLogin)"),
+    Ctrl.markEvent("End(AdminNavigateToCommentsSection)"),
+    // Ensuring comment functionality works as expected.
+    Ctrl.markEvent("End(submitProductReview)"),
+    // Ensuring toggles for comments work both ways.
+    Ctrl.markEvent("End(toggleGuestComments)"),
+    Ctrl.markEvent("End(toggleGuestCommentsOFF)")
 ];
 
-const makeGoals = function(){
-    return [ [ any(/Howdy/), any(/Venus/) ],
-             [ any(/Mars/) ],
-             [ Ctrl.markEvent("Classic!") ] ];
-}
+const GOALS_TWO_WAYS = [
+    // Check that comments can be toggled on and off.
+    [Ctrl.markEvent("End(toggleGuestComments)"), Ctrl.markEvent("End(toggleGuestCommentsOFF)")]
+];
+
+const GOALS = GOALS_DOMAIN_SPECIFIC
+// const GOALS =GOALS_TWO_WAYS
+
+const makeGoalsTwoWay = function() {
+    return GOALS_TWO_WAYS;
+};
+
+const makeGoalsDomainSpecific = function() {
+    return GOALS_DOMAIN_SPECIFIC;
+};
+
 
 /**
  * Ranks test suites by how many events from the GOALS array were met.
@@ -23,48 +39,27 @@ const makeGoals = function(){
  *
  * @param {Event[][]} ensemble The test suite to be ranked.
  * @returns Number of events from GOALS that have been met.
- */
-function rankByMetGoals( ensemble ) {
-    const unreachedGoals = [];
-    for ( let idx=0; idx<GOALS.length; idx++ ) {
-        unreachedGoals.push(GOALS[idx]);
-    }
+*/
+function rankByMetGoals(ensemble) {
+    let metGoalsCount = 0;
 
-    for (let testIdx = 0; testIdx < ensemble.length; testIdx++) {
-        let test = ensemble[testIdx];
-        for (let eventIdx = 0; eventIdx < test.length; eventIdx++) {
-            let event = test[eventIdx];
-            for (let ugIdx=unreachedGoals.length-1; ugIdx >=0; ugIdx--) {
-                let unreachedGoal = unreachedGoals[ugIdx];
-                if ( unreachedGoal.contains(event) ) {
-                    unreachedGoals.splice(ugIdx,1);
-                }
+    ensemble.forEach(test => {
+        test.forEach(event => {
+            if (GOALS.some(goal => goal.eventName === event.eventName)) {
+                metGoalsCount++;
             }
-        }
-    }
+        });
+    });
 
-    return GOALS.length-unreachedGoals.length;
+    return metGoalsCount; // Return the count of met goals.
 }
 
-/**
- * Ranks potential test suites based on the percentage of goals they cover.
- * Goal events are defined in the GOALS array above. An ensemble with rank
- * 100 covers all the goal events.
- *
- * Multiple ranking functions are supported - to change ranking function,
- * use the `ensemble.ranking-function` configuration key, or the 
- * --ranking-function <functionName> command-line parameter.
- *
- * @param {Event[][]} ensemble the test suite/ensemble to be ranked
- * @returns the percentage of goals covered by `ensemble`.
- */
- function rankingFunction(ensemble) {
-    
-    // How many goals did `ensemble` hit?
+
+function rankingFunction(ensemble) {
     const metGoalsCount = rankByMetGoals(ensemble);
-    // What percentage of the goals did `ensemble` cover?
-    const metGoalsPercent = metGoalsCount/GOALS.length;
+    const metGoalsPercent = metGoalsCount / GOALS.length;
 
-    return metGoalsPercent * 100; // convert to human-readable percentage
+    return metGoalsPercent * 100; // Convert to percentage
 }
+
 
