@@ -4,8 +4,7 @@ This is a repository for the system-testing assignment of the Software Quality E
 ## Assignment Description
 In this assignment, we tested an open-source software called [$$*TODO* software name$$](https://address-of-the-project.com).
 
-$$*TODO* Add some general description about the software$$
-
+Prestashop is a e-commerce platform for sellers, consumers.
 ## Installation
 Install provengo, chroemedriver and selenium in your pc. 
 Install prestashop through the directory. full explanations are in there.
