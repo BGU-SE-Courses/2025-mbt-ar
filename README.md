@@ -36,17 +36,8 @@ We used two different testing methods:
 Each of the testing methods is elaborated in its own directory. 
 
 ## Results
-Update all README.md files (except for d-e, see waSection 1). Specifically, replace all $$*TODO*…$$ according to the instructions inside the $$.
+User can add a review, only if , else test fails.(as excepted)
+Manager can turn off comments through admin panel, only if it is not already toggled, else test fails.(as expected)
+User
 
-## Detected Bugs
-We detected the following bugs:
 
-1. Bug 1: 
-   1. General description: ...
-   2. Steps to reproduce: ...
-   3. Expected result: ...
-   4. Actual result: ...
-   5. Link to the bug report: (you are encouraged to report the bug to the developers of the software)
-2. Bug 2: ...
-
-$$*TODO* if you did not detect the bug, you should delete this section$$  
