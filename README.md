@@ -2,7 +2,7 @@
 This is a repository for the system-testing assignment of the Software Quality Engineering course at the [Ben-Gurion University](https://in.bgu.ac.il/), Israel.
 
 ## Assignment Description
-In this assignment, we tested an open-source software called PrestaShop (https://prestashop.com/).
+In this assignment, we tested an open-source software called PrestaShop (https://demo.prestashop.com/#/en/front).
 
 Prestashop is a e-commerce platform for sellers, consumers.
 ## Installation
@@ -13,15 +13,33 @@ Go to provengo directory and act as in readme.md overthere, until getting the re
 
 
 ## What we tested
-For example, in the case of the Moodle example, you can write something like this:
-We tested the review/commeents module, that allows guests to leave a comment/review in a product, and lets the admin control this option through admin panel.
-We chose to test the following stories:
-1.*User story:* guest leave a review in a product
-pre-conditions: there are products in admin shop.
-expected outcome: review has been saved, and shown in product page. if can't add it, test fails.
-2.*User story:* Admin turn off:.
-pre-conditions: there are products in admin shop, admin user is check@check.check ,password: 12345678
-expected outcome: Save success, A guest can not leave a comment.
+We tested the PrestaShop module for a clothes shop that allows guests to add comments to product pages. We focused on the following user story:
+
+1. Guest Adds a Comment to a Product
+
+Preconditions:
+
+The clothes shop has a product page with commenting enabled.
+
+Guests are allowed to post comments.
+
+Expected Outcome:
+
+The guest successfully submits a comment, which appears on the product page.
+
+2. Admin Disables Guest Comments
+
+Preconditions:
+
+Guest commenting is enabled, and there are existing comments from guests.
+
+The admin has access to the settings to manage commenting permissions.
+
+Expected Outcome:
+
+The admin disables guest commenting.
+
+Guests can no longer add new comments to product pages.
 
 
 
