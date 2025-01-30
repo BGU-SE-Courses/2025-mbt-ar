@@ -17,29 +17,29 @@ We tested the PrestaShop module for a clothes shop that allows guests to add com
 
 1. Guest Adds a Comment to a Product
 
-Preconditions:
-
-The clothes shop has a product page with commenting enabled.
-
-Guests are allowed to post comments.
-
-Expected Outcome:
-
-The guest successfully submits a comment, which appears on the product page.
+  Preconditions:
+  
+  The clothes shop has a product page with commenting enabled.
+  
+  Guests are allowed to post comments.
+  
+  Expected Outcome:
+  
+  The guest successfully submits a comment, which appears on the product page.
 
 2. Admin Disables Guest Comments
 
-Preconditions:
-
-Guest commenting is enabled, and there are existing comments from guests.
-
-The admin has access to the settings to manage commenting permissions.
-
-Expected Outcome:
-
-The admin disables guest commenting.
-
-Guests can no longer add new comments to product pages.
+  Preconditions:
+  
+  Guest commenting is enabled, and there are existing comments from guests.
+  
+  The admin has access to the settings to manage commenting permissions.
+  
+  Expected Outcome:
+  
+  The admin disables guest commenting.
+  
+  Guests can no longer add new comments to product pages.
 
 
 
