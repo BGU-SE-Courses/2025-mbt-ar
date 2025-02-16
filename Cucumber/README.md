@@ -1,5 +1,5 @@
-# Testing $$*TODO* software name$$ using Cucumber
-This directory contains the cucumber files for testing the $$*TODO* module name$$ module of the PrestaShop application.
+# Testing PrestaShop using Cucumber
+This directory contains the cucumber files for testing the Admin Admin & Customer functionality module of the PrestaShop application.
 
 ## Running the tests
 Run ```mvn test``` to run all the tests.
